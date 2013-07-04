@@ -24,13 +24,15 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 		
 	private Thread[] t; // Threads' Array
 
+
 	
 	
 	/** 
 	 * Constructor Without Seed
 	 * @param seqLength Random Number's Length
+	 * @throws InterruptedException 
 	 */
-	public ParallelRandChar(int seqLength) {
+	public ParallelRandChar(int seqLength) throws InterruptedException {
 		
 		byte[] seed = this.generateSeed(seqLength);
 		
@@ -45,6 +47,7 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 	 * Constructor With Seed
 	 * @param seed Seed Used To Generate The Random Values
 	 * @param seqLength Random Number's Length
+	 * @throws InterruptedException 
 	 */
 	public ParallelRandChar(long seed, int seqLength) {
 			
@@ -59,6 +62,7 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 	/**
 	 * Method that initialise the object
 	 * @param seqLength seqLength Random Number's Length
+	 * @throws InterruptedException 
 	 */
 	private void ParallelRandCharInitialise(int seqLength) {
 		
@@ -72,10 +76,12 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 		
 		this.threadNum = this.cores;
 		
+		this.threadNum = 2*this.cores;
+		
 		// If more core than required random number, decrease thread number
-		if (this.threadNum > this.seqLength) { 
+		while (this.threadNum > this.seqLength) { 
 			
-			this.threadNum = this.seqLength;
+			this.threadNum--;
 			
 		}		
 		
@@ -89,32 +95,39 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 		// Create And Start The Threads
 		for (int i = 0; i < this.threadNum; i++) {
 		
-			t[i] = new Thread (this, "Rand Char THread " + i);
+			t[i] = new Thread (this, "Rand Char Thread " + i);
 						
-			t[i].run();
+			t[i].start();
 		
 		}
+		
+		for (int i = 0; i < this.threadNum; i++) {
+			
+			while (t[i].isAlive()) {
+				
+				try {
+					
+					Thread.sleep(50);
+				
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				
+				}					
+				
+			}
+						
+		}	
 		
 		// Number Of The Remaining Random Values To Calculate
 		int remainingNumbers = this.seqLength - (this.seqPerThread*this.threadNum); 
 		
 		// If There Are Other Numbers To Calculate
 		if (remainingNumbers > 0) {
+									
+			this.CharacterRandGen(remainingNumbers, this.range);		
 			
-			Character[] rem = new Character[remainingNumbers];
-			
-			rem = this.CharacterRandGen(remainingNumbers, this.range);
-			
-			// Add The Remaining Random Numbers To The ArrayList
-			for (int i = 0; i < rem.length; i++) {
-				
-				this.randCharArrList.add(rem[i]);
-				
-			}
-			
-		}
-		
-		
+		}		
 			
 	}
 		
@@ -126,28 +139,10 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 	@Override
 	public void run() {
 			
-		Character[] charat = this.CharacterRandGen();
-		
-		for (int i=0; i<charat.length; i++) {
-				
-			this.randCharArrList.add(charat[i]);
-				
-		}
+		this.CharacterRandGen(this.seqPerThread, this.range);
 			
 	}
 
-	
-	
-	/** 
-	 * Calculate Random Chars With Private Arguments
-	 * @return Char Array Of Random Numbers
-	 */
-	public Character[] CharacterRandGen () {
-			
-		return this.CharacterRandGen(this.seqPerThread, this.range);
-			
-	}
-	
 	
 	
 	/** 
@@ -156,13 +151,11 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 	 * @param range Range For The Random Numbers
 	 * @return Character Array Of Random Numbers
 	 */
-	public Character[] CharacterRandGen (int seqLength, int range) {
-		
-		Character[] ArrTmp = new Character[seqPerThread];
+	public synchronized void CharacterRandGen (int seqLength, int range) {
 		
 		int tmpValue = 0;
 		
-		for (int i = 0; i < seqPerThread; i++) {
+		for (int i = 0; i < seqLength; i++) {
 			
 			do {
 				
@@ -170,11 +163,11 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 			
 			} while (tmpValue < 32);
 			
-			ArrTmp[i] =(char) tmpValue;
+			this.randCharArrList.add((char) tmpValue);
 				
 		}
 		
-		return ArrTmp;
+		
 			
 	}
 	
@@ -206,6 +199,17 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 		return randCharArr;
 	
 	}
+	
+	
+	/**
+	 * Return The ArrayList Size
+	 * @return Int Contatining The ArrayList Size
+	 */
+	public int getRandCharArrSize() {
+		
+		return this.randCharArrList.size();
+		
+	}
 
 
 	
@@ -221,6 +225,7 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 			
 			s += el;
 		}
+		
 		return s;
 		
 	}

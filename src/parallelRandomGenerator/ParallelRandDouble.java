@@ -63,6 +63,7 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 	 * Method that initialise the object
 	 * @param seqLength Random Number's Length
 	 * @param range Range For The Random Numbers
+	 * @throws InterruptedException 
 	 */
 	private void ParallelRandDoubleInitialise (int seqLength, double range) {
 		
@@ -74,14 +75,14 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 		
 		this.cores = Runtime.getRuntime().availableProcessors();
 		
-		this.threadNum = this.cores;
+		this.threadNum = 2*this.cores;
 		
 		// If more core than required random number, decrease thread number
-		if (this.threadNum > this.seqLength) { 
+		while (this.threadNum > this.seqLength) { 
 			
-			this.threadNum = this.seqLength;
+			this.threadNum--;
 			
-		}		
+		}	
 		
 		// Random Number Per Core
 		this.seqPerThread = (int)(this.seqLength / this.threadNum);
@@ -93,11 +94,29 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 		// Create And Start The Threads
 		for (int i = 0; i < this.threadNum; i++) {
 		
-			t[i] = new Thread (this, "Rand Double THread " + i);
+			t[i] = new Thread (this, "Rand Double Thread " + i);
 						
-			t[i].run();
+			t[i].start();
 		
 		}
+		
+		for (int i = 0; i < this.threadNum; i++) {
+			
+			while (t[i].isAlive()) {
+				
+				try {
+					
+					Thread.sleep(50);
+				
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				
+				}					
+				
+			}
+		
+		}	
 		
 		// Number Of The Remaining Random Values To Calculate
 		int remainingNumbers = this.seqLength - (this.seqPerThread*this.threadNum); 
@@ -105,20 +124,9 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 		// If There Are Other Numbers To Calculate
 		if (remainingNumbers > 0) {
 			
-			Double[] rem = new Double[remainingNumbers];
-			
-			rem = this.DoubleRandGen(remainingNumbers, this.range);
-			
-			// Add The Remaining Random Numbers To The ArrayList
-			for (int i = 0; i < rem.length; i++) {
-				
-				this.randDoubleArrList.add(rem[i]);
-				
-			}
-			
-		}
-		
-		
+			this.DoubleRandGen(remainingNumbers, this.range);			
+						
+		}		
 			
 	}
 		
@@ -130,48 +138,26 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 	@Override
 	public void run() {
 			
-		Double[] doub = this.DoubleRandGen();
-		
-		for (int i=0; i<doub.length; i++) {
-				
-			this.randDoubleArrList.add(doub[i]);
-				
-		}
+		this.DoubleRandGen (this.seqPerThread, this.range);
 			
 	}
 
 	
 		
 	/** 
-	 * Calculate Random Doubles With Private Arguments
-	 * @return Double Array Of Random Numbers
-	 */
-	private Double[] DoubleRandGen () {
-			
-		return this.DoubleRandGen (this.seqPerThread, this.range);
-			
-	}
-	
-	
-	
-	/** 
 	 * Calculate Random Doubles With Inputed Arguments
 	 * @param seqLength Array's Length
 	 * @param range 
 	 * @return Doubles'Array Of Random Numbers
 	 */
-	public Double[] DoubleRandGen (int seqLength, double range) {
-		
-		Double[] ArrTmp = new Double[seqLength];
+	public synchronized void DoubleRandGen (int seqLength, double range) {
 		
 		for (int i = 0; i < seqLength; i++) {
 			
-			ArrTmp[i] = range*this.nextDouble();
+			this.randDoubleArrList.add(range*this.nextDouble());
 			
-		}
-		
-		return ArrTmp;
-		
+		}		
+				
 	}
 
 	
@@ -200,6 +186,18 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 				
 		return randDoubleArr;
 	
+	}
+	
+	
+	
+	/**
+	 * Return The ArrayList Size
+	 * @return Int Contatining The ArrayList Size
+	 */
+	public int getRandDoubleArrSize() {
+		
+		return this.randDoubleArrList.size();
+		
 	}
 
 	
