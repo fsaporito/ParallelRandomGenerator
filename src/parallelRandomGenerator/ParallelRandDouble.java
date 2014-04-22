@@ -2,10 +2,10 @@ package parallelRandomGenerator;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Random;
+import java.security.SecureRandom;
 
 
-public class ParallelRandDouble extends Random implements Runnable {
+public class ParallelRandDouble extends SecureRandom implements Runnable {
 
 
 	private static final long serialVersionUID = 1L;
@@ -26,17 +26,45 @@ public class ParallelRandDouble extends Random implements Runnable {
 
 	
 
+	/** 
+	 * Constructor Without Seed
+	 * @param seqLength Random Number's Length
+	 * @param range Range For The Random Numbers
+	 */
+	public ParallelRandDouble(int seqLength, double range) {
+		
+		byte[] seed = this.generateSeed(seqLength);
+		
+		this.setSeed(seed);
+		
+		this.ParallelRandDoubleInitialise (seqLength, range);
+		
+	}
+	
 	
 	
 	/** 
-	 * Constructor
+	 * Constructor With Seed
 	 * @param seed Seed Used To Generate The Random Values
 	 * @param seqLength Random Number's Length
 	 * @param range Range For The Random Numbers
 	 */
 	public ParallelRandDouble(long seed, int seqLength, double range) {
 			
-		super(seed);
+		this.setSeed(seed);
+	
+		this.ParallelRandDoubleInitialise (seqLength, range);		
+		
+	}
+	
+	
+	
+	/** 
+	 * Method that initialise the object
+	 * @param seqLength Random Number's Length
+	 * @param range Range For The Random Numbers
+	 */
+	private void ParallelRandDoubleInitialise (int seqLength, double range) {
 		
 		this.randDoubleArrList = new ArrayList<Double>();
 		
@@ -183,7 +211,7 @@ public class ParallelRandDouble extends Random implements Runnable {
 	@Override
 	public String toString() {
 		
-		return "randDouble [randDoubleArrList=" + randDoubleArrList + "]";
+		return randDoubleArrList.toString();
 		
 	}
 	

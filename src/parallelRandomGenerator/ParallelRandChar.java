@@ -2,10 +2,10 @@ package parallelRandomGenerator;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Random;
+import java.security.SecureRandom;
 
 
-public class ParallelRandChar extends Random implements Runnable {
+public class ParallelRandChar extends SecureRandom implements Runnable {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -25,17 +25,42 @@ public class ParallelRandChar extends Random implements Runnable {
 	private Thread[] t; // Threads' Array
 
 	
-
+	
+	/** 
+	 * Constructor Without Seed
+	 * @param seqLength Random Number's Length
+	 */
+	public ParallelRandChar(int seqLength) {
+		
+		byte[] seed = this.generateSeed(seqLength);
+		
+		this.setSeed(seed);
+		
+		this.ParallelRandCharInitialise (seqLength);
+		
+	}
 	
 	
 	/** 
-	 * Constructor
+	 * Constructor With Seed
 	 * @param seed Seed Used To Generate The Random Values
 	 * @param seqLength Random Number's Length
 	 */
 	public ParallelRandChar(long seed, int seqLength) {
 			
-		super(seed);
+		this.setSeed(seed);
+	
+		this.ParallelRandCharInitialise (seqLength);		
+		
+	}
+	
+	
+	
+	/**
+	 * Method that initialise the object
+	 * @param seqLength seqLength Random Number's Length
+	 */
+	private void ParallelRandCharInitialise(int seqLength) {
 		
 		this.randCharArrList = new ArrayList<Character>();
 		
@@ -210,9 +235,10 @@ public class ParallelRandChar extends Random implements Runnable {
 		
 		for (Character el: this.getRandCharArrList()) {
 			
-			s += el + "\n";
+			s += el;
 			
 		}
+		
 		return s;
 		
 	}
