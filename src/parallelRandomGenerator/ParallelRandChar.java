@@ -226,8 +226,20 @@ public class ParallelRandChar extends SecureRandom implements Runnable {
 	}
 	
 	
+	
+	/**
+	 * Outputs A String Containing Used Algorithm
+     */
+	public String getAlgo () {
+		
+		return this.getAlgorithm();
+		
+	}
+	
+	
+	
 	/** 
-	 * Print The Requested Random Chars One Per Line
+	 * Print The Requested Random Chars
 	 */
 	public String toStringNl() {
 		

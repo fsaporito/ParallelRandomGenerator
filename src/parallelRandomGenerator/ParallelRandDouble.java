@@ -202,7 +202,17 @@ public class ParallelRandDouble extends SecureRandom implements Runnable {
 	
 	}
 
+	
 
+	/**
+	 * Outputs A String Containing Used Algorithm
+     */
+	public String getAlgo () {
+		
+		return this.getAlgorithm();
+		
+	}
+	
 	
 	
 	/**

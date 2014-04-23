@@ -205,6 +205,17 @@ public class ParallelRandInt extends SecureRandom implements Runnable {
 
 	
 	
+	 /**
+     * Outputs A String Containing Used Algorithm
+     */
+	public String getAlgo () {
+		
+		return this.getAlgorithm();
+		
+	}
+	
+	
+	
     /**
      * Outputs A String Containing The Random Integers
      */
