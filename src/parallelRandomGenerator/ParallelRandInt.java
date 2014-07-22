@@ -10,19 +10,26 @@ public class ParallelRandInt extends SecureRandom implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private ArrayList<Integer> randIntArrList; // ArrayList Containing The Random Numbers
+	/** ArrayList Containing The Random Numbers */
+	private ArrayList<Integer> randIntArrList;
 		
-	private int cores; // Number Of Core Available
+	/** Number Of Core Available */
+	private int cores;
 	
-	private int threadNum; // Number Of Threads To Use
+	/** Number Of Threads To Use */
+	private int threadNum;
 	
-	private int seqLength; // Random Number's Length
+	/** // Random Sequence's Length */
+	private int seqLength; 
 	
-	private int seqPerThread; // Random Number's Length For Every Thread
+	/** Random Number's Length For Every Thread */
+	private int seqPerThread;
 		
-	private int range; // Range For The Random Numbers
+	/** Range For The Random Numbers */
+	private int range; // 
 		
-	private Thread[] t; // Threads' Array
+	/** Threads' Array */
+	private Thread[] t; // 
 
 	
 	
@@ -148,7 +155,6 @@ public class ParallelRandInt extends SecureRandom implements Runnable {
 	 * Calculate Random Integers With Inputed Arguments
 	 * @param seqLength Array's Length
 	 * @param range Range For The Random Numbers
-	 * @return Integer Array Of Random Numbers
 	 * @throws InterruptedException 
 	 */
 	public synchronized void IntegerRandGen (int seqLength, int range) {

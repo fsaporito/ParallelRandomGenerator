@@ -10,7 +10,7 @@ public class RandMain {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 	
-		int num = 9;
+		int num = 10;
 		boolean INTEGER = true;
 		boolean DOUBLE = true;
 		boolean CHARACTER = true;
