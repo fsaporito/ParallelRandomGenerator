@@ -128,7 +128,7 @@ public class randomGuy implements ActionListener {
 			
 			if (this.type.equals("Integer")) {
 			
-				ParallelRandInt rand = new ParallelRandInt(seed, range, size);
+				ParallelRandInt rand = new ParallelRandInt(seed, size, range);
 			
 				this.textArea.setText(rand.toString());
 				
@@ -136,7 +136,7 @@ public class randomGuy implements ActionListener {
 			
 			if (this.type.equals("Double")) {
 				
-				ParallelRandDouble rand = new ParallelRandDouble (seed, range, size);
+				ParallelRandDouble rand = new ParallelRandDouble (seed, size, range);
 			
 				this.textArea.setText(rand.toString());
 				
