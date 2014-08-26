@@ -10,7 +10,7 @@ public class RandMain {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 	
-		int num = 10;
+		int num = 5;
 		boolean INTEGER = true;
 		boolean DOUBLE = true;
 		boolean CHARACTER = true;
@@ -23,7 +23,7 @@ public class RandMain {
 		
 			System.out.println ("Generating " + num + " Random Integers:");
 		
-			ParallelRandInt rand1 = new ParallelRandInt(788, num, 1020);
+			ParallelRandInt rand1 = new ParallelRandInt(748, num, 10);
 		
 			System.out.println ("Algorithm: " + rand1.getAlgo());		
 		
@@ -52,7 +52,7 @@ public class RandMain {
 		
 			System.out.println ("Generating " + num + " Random Double:");
 		
-			ParallelRandDouble rand2 = new ParallelRandDouble(1423, num, 10);
+			ParallelRandDouble rand2 = new ParallelRandDouble(748, num, 10);
 		
 			System.out.println ("Algorithm: " + rand2.getAlgo());	
 		
@@ -83,7 +83,7 @@ public class RandMain {
 			
 			System.out.println ("Generating " + num + " Random Char:");
 				
-			ParallelRandChar rand3 = new ParallelRandChar(788, num);
+			ParallelRandChar rand3 = new ParallelRandChar(748, num);
 		
 			System.out.println ("Algorithm: " + rand3.getAlgo());	
 		
